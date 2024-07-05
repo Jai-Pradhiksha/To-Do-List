@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+        }
+        .task-completed {
+            text-decoration: line-through;
+        }
+        .badge-custom {
+            border-radius: 12px;
+            padding: 0.5em 1em;
+        }
+        .delete-icon {
+            cursor: pointer;
+        }
+        .container h2{
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>To-Do List</h2>
+        <div class="form-row mb-3">
+            <div class="col">
+                <input type="text" id="task-name" class="form-control" placeholder="Task name">
+            </div>
+            <div class="col">
+                <input type="date" id="task-date" class="form-control">
+            </div>
+            <div class="col">
+                <input type="text" id="task-project" class="form-control" placeholder="Project">
+            </div>
+            <div class="col">
+                <button id="add-task" class="btn btn-primary">Add Task</button>
+            </div>
+        </div>
+        <table class="table table-striped"  style="margin-top: 30px;">
+            <thead>
+                <tr>
+                    <th>Task name</th>
+                    <th>Due date</th>
+                    <th>Projects</th>
+                </tr>
+            </thead>
+            <tbody id="task-list">
+                <!-- Tasks will be dynamically added here -->
+            </tbody>
+        </table>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const tasks = [];
+
+        function formatDate(date) {
+            const today = new Date();
+            return date.toDateString() === today.toDateString() ? 'Today' : date.toISOString().split('T')[0];
+        }
+
+        function renderTasks() {
+            $('#task-list').empty();
+            tasks.forEach((task, index) => {
+                const taskRow = $(`
+                    <tr>
+                        <td class="task-name">${task.name} <span class="delete-icon text-danger">&times;</span></td>
+                        <td>
+                            <input type="date" class="form-control" value="${task.dueDate.toISOString().split('T')[0]}" />
+                        </td>
+                        <td>
+                            <span class="badge badge-custom" style="background-color: #f0f0f0;">
+                                <i class="text-primary">&#9679;</i> ${task.project}
+                            </span>
+                        </td>
+                    </tr>
+                `);
+                taskRow.find('.task-name').click(() => {
+                    taskRow.find('.task-name').toggleClass('task-completed');
+                });
+                taskRow.find('.delete-icon').click(() => {
+                    tasks.splice(index, 1);
+                    renderTasks();
+                });
+                taskRow.find('input[type="date"]').change(function() {
+                    const newDate = new Date(this.value);
+                    task.dueDate = newDate;
+                    renderTasks();
+                });
+                $('#task-list').append(taskRow);
+            });
+        }
+
+        $('#add-task').click(() => {
+            const taskName = $('#task-name').val();
+            const taskDate = new Date($('#task-date').val());
+            const taskProject = $('#task-project').val();
+            if (taskName && taskDate && taskProject) {
+                tasks.push({
+                    name: taskName,
+                    dueDate: taskDate,
+                    project: taskProject
+                });
+                $('#task-name').val('');
+                $('#task-date').val('');
+                $('#task-project').val('');
+                renderTasks();
+            } else {
+                alert('Please fill in all fields');
+            }
+        });
+
+        $(document).ready(function() {
+            renderTasks();
+        });
+    </script>
+</body>
+</html>
