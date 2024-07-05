@@ -36,3 +36,7 @@ The project follows a typical Django project structure, with a dedicated `apptod
 - **Editing a Task**: Change the due date directly in the table to update the task.
 - **Deleting a Task**: Click the red `×` icon next to the task name to delete it.
 - **Marking as Completed**: Click on the task name to toggle the completed status.
+
+## Output
+![image](https://github.com/Jai-Pradhiksha/To-Do-List/assets/100289733/6f106d64-92a2-487e-8889-ae3d7518824d)
+
